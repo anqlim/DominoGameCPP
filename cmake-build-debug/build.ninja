@@ -56,6 +56,34 @@ build CMakeFiles/dominoCPP.dir/main.cpp.obj: CXX_COMPILER__dominoCPP_unscanned_D
   OBJECT_DIR = CMakeFiles\dominoCPP.dir
   OBJECT_FILE_DIR = CMakeFiles\dominoCPP.dir
 
+build CMakeFiles/dominoCPP.dir/button.cpp.obj: CXX_COMPILER__dominoCPP_unscanned_Debug D$:/Politech/programming/3semester/dominoCPP/button.cpp || cmake_object_order_depends_target_dominoCPP
+  DEP_FILE = CMakeFiles\dominoCPP.dir\button.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/Politech/programming/3semester/dominoCPP/raylib/include
+  OBJECT_DIR = CMakeFiles\dominoCPP.dir
+  OBJECT_FILE_DIR = CMakeFiles\dominoCPP.dir
+
+build CMakeFiles/dominoCPP.dir/player.cpp.obj: CXX_COMPILER__dominoCPP_unscanned_Debug D$:/Politech/programming/3semester/dominoCPP/player.cpp || cmake_object_order_depends_target_dominoCPP
+  DEP_FILE = CMakeFiles\dominoCPP.dir\player.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/Politech/programming/3semester/dominoCPP/raylib/include
+  OBJECT_DIR = CMakeFiles\dominoCPP.dir
+  OBJECT_FILE_DIR = CMakeFiles\dominoCPP.dir
+
+build CMakeFiles/dominoCPP.dir/tile.cpp.obj: CXX_COMPILER__dominoCPP_unscanned_Debug D$:/Politech/programming/3semester/dominoCPP/tile.cpp || cmake_object_order_depends_target_dominoCPP
+  DEP_FILE = CMakeFiles\dominoCPP.dir\tile.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/Politech/programming/3semester/dominoCPP/raylib/include
+  OBJECT_DIR = CMakeFiles\dominoCPP.dir
+  OBJECT_FILE_DIR = CMakeFiles\dominoCPP.dir
+
+build CMakeFiles/dominoCPP.dir/list.cpp.obj: CXX_COMPILER__dominoCPP_unscanned_Debug D$:/Politech/programming/3semester/dominoCPP/list.cpp || cmake_object_order_depends_target_dominoCPP
+  DEP_FILE = CMakeFiles\dominoCPP.dir\list.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/Politech/programming/3semester/dominoCPP/raylib/include
+  OBJECT_DIR = CMakeFiles\dominoCPP.dir
+  OBJECT_FILE_DIR = CMakeFiles\dominoCPP.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target dominoCPP
@@ -64,7 +92,7 @@ build CMakeFiles/dominoCPP.dir/main.cpp.obj: CXX_COMPILER__dominoCPP_unscanned_D
 #############################################
 # Link the executable dominoCPP.exe
 
-build dominoCPP.exe: CXX_EXECUTABLE_LINKER__dominoCPP_Debug CMakeFiles/dominoCPP.dir/main.cpp.obj
+build dominoCPP.exe: CXX_EXECUTABLE_LINKER__dominoCPP_Debug CMakeFiles/dominoCPP.dir/main.cpp.obj CMakeFiles/dominoCPP.dir/button.cpp.obj CMakeFiles/dominoCPP.dir/player.cpp.obj CMakeFiles/dominoCPP.dir/tile.cpp.obj CMakeFiles/dominoCPP.dir/list.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lraylib  -lopengl32  -lgdi32  -lwinmm  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LD:/Politech/programming/3semester/dominoCPP/raylib/lib
