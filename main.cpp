@@ -1,14 +1,20 @@
 #include <iostream>
 #include "raylib/include/raylib.h"
-#include "graphics.h"
+#include "colors.h"
+#include "button.h"
+#include "tile.h"
 
 int main() {
-    InitWindow(800, 600, "Hello Raylib!");
+    InitWindow(1800, 1000, "Domino");
+    Button button({100, 100, 200, 100}, FIREBRICK, (std::string)"domino", BARNRED);
+    Tile tile(6, 2);
 
     while (!WindowShouldClose()) {
-        ClearBackground(BARNRED);
+        ClearBackground(RAYWHITE);
         BeginDrawing();
-        DrawText("Hello Domino!", 100, 100, 100, RAYWHITEgit );
+        button.draw();
+        tile.draw(200, 200, vertical);
+        tile.draw(400, 400, horizontal);
         EndDrawing();
     }
 
