@@ -1,3 +1,0 @@
-D:/Politech/programming/3semester/dominoCPP/cmake-build-debug/CMakeFiles/dominoCPP.dir
-D:/Politech/programming/3semester/dominoCPP/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/Politech/programming/3semester/dominoCPP/cmake-build-debug/CMakeFiles/rebuild_cache.dir
