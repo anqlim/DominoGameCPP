@@ -1,7 +1,9 @@
 #include "button.h"
 
 Button::Button(Rectangle _rec, Color _color, const std::string& _text, Color _textColor):
-rec(_rec), color(_color), text(_text), textColor(_textColor){}
+rec(_rec), color(_color), text(_text), textColor(_textColor){
+    rec.y = WINDOW_HEIGHT - rec.y;
+}
 
 bool Button::isClicked(float mouseX, float mouseY){
     return (mouseX >= rec.x && mouseX <= rec.x + rec.width) && (mouseY >= rec.y && mouseY <= rec.y + rec.height);

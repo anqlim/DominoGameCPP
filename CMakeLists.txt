@@ -10,7 +10,7 @@ include_directories(${RAYLIB_PATH}/include)
 link_directories(${RAYLIB_PATH}/lib)
 
 add_executable(${PROJECT_NAME} main.cpp
-        colors.h
+        parameters.h
         button.h
         button.cpp
         player.cpp
@@ -18,7 +18,12 @@ add_executable(${PROJECT_NAME} main.cpp
         list.h
         tile.h
         tile.cpp
-        list.cpp)
+        list.cpp
+        mouse.h
+        mouse.cpp
+        set.cpp
+        set.h
+)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 

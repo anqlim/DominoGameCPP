@@ -4,7 +4,9 @@
 
 class Player {
 public:
-    Node* prev;
+    Player();
+    ~Player();
+    Node* head;
     Node* tail;
 };
 

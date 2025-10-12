@@ -1,6 +1,6 @@
 #include "tile.h"
 #include "raylib.h"
-#include "colors.h"
+#include "parameters.h"
 
 Tile::Tile(int _left, int _right) : left(_left), right(_right) {}
 
@@ -38,6 +38,7 @@ void drawDots(int x, int y, int value, Position position) {
 }
 
 void Tile::draw(int x, int y, Position position) {
+    y = WINDOW_HEIGHT - y;
     if (position == horizontal) {
         DrawRectangle(x, y, TILE_WIDTH, TILE_HEIGHT, PAPAYAWHIP);
         DrawRectangleLines(x, y, TILE_WIDTH / 2, TILE_HEIGHT, PRUSSIANBLUE);

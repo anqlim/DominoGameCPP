@@ -5,9 +5,9 @@
 class Node {
 private:
     Tile tile;
+public:
     Node* prev;
     Node* next;
-public:
     Node(Tile _tile);
     void remove();
     void add(Tile& tile);

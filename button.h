@@ -2,6 +2,7 @@
 #define BUTTON_H
 #include <string>
 #include "raylib.h"
+#include "parameters.h"
 
 class Button {
 private:
