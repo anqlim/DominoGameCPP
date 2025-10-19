@@ -23,6 +23,8 @@ add_executable(${PROJECT_NAME} main.cpp
         mouse.cpp
         set.cpp
         set.h
+        field.cpp
+        field.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
