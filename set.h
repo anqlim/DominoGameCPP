@@ -2,12 +2,13 @@
 #define SET_H
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 #include "player.h"
 #include "field.h"
 
-void dealTiles(Player* player, Tile* set, int* count, int num);
-void shuffleSet(Tile* set, int count);
-void createSet(Tile* set, int* count);
-void initGame(Tile* set, User* user, Bot* bot, Field* field, int* count);
+void dealTiles(Player& player, std::vector<Tile>& set, int num);
+void shuffleSet(std::vector<Tile>& set);
+void createSet(std::vector<Tile>& set);
+void initSet(std::vector<Tile>& set, User& user, Bot& bot, Field& field);
 
 #endif

@@ -3,9 +3,8 @@
 #include "tile.h"
 
 class Node {
-private:
-    Tile tile;
 public:
+    Tile tile;
     Node* prev;
     Node* next;
     Node(Tile _tile);

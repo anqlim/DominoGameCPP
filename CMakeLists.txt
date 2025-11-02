@@ -19,12 +19,16 @@ add_executable(${PROJECT_NAME} main.cpp
         tile.h
         tile.cpp
         list.cpp
-        mouse.h
-        mouse.cpp
+        game.h
+        game.cpp
         set.cpp
         set.h
         field.cpp
         field.h
+        menu.cpp
+        menu.h
+        records.cpp
+        records.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)

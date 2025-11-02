@@ -7,10 +7,9 @@
 enum Position {horizontal, vertical};
 
 class Tile {
-private:
+public:
     int left;
     int right;
-public:
     Tile(int _left, int _right);
     void swap();
     void draw(int x, int y, Position position);

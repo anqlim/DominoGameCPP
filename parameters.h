@@ -1,20 +1,6 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-//states
-enum State {
-    menu,
-    help,
-    records,
-    game
-};
-
-enum Result {
-    win,
-    lose,
-    def
-};
-
 //window
 #define WINDOW_WIDTH 1800
 #define WINDOW_HEIGHT 1000
@@ -26,5 +12,19 @@ enum Result {
 #define PRUSSIANBLUE (Color){0, 48, 73, 255}
 #define AIRSUPERIORITYBLUE (Color){102, 155, 188, 255}
 #define GRAYISHBLUE (Color){177, 197, 200, 255}
+
+//states
+enum State {
+    MENU,
+    RECORDS,
+    BOT_MOVE,
+    USER_MOVE
+};
+
+enum Result {
+    WIN,
+    LOSE,
+    DEFAULT
+};
 
 #endif

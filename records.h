@@ -1,14 +1,14 @@
-//
-// Created by user on 19.10.2025.
-//
+#ifndef RECORDS_H
+#define RECORDS_H
+#include "parameters.h"
 
-#ifndef DOMINOCPP_RECORDS_H
-#define DOMINOCPP_RECORDS_H
+class Records {
+private:
 
-
-class records {
-
+public:
+    Records();
+    void manage(State& state, Result& res);
+    void draw();
 };
 
-
-#endif //DOMINOCPP_RECORDS_H
+#endif

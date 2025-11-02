@@ -1,14 +1,12 @@
-//
-// Created by user on 19.10.2025.
-//
+#ifndef MENU_H
+#define MENU_H
+#include "parameters.h"
 
-#ifndef DOMINOCPP_MENU_H
-#define DOMINOCPP_MENU_H
+class Menu{
+private:
 
-
-class menu {
-
+public:
+    void manage(State& state);
 };
 
-
-#endif //DOMINOCPP_MENU_H
+#endif
