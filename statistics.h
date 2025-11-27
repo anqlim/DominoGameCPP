@@ -1,0 +1,8 @@
+//
+// Created by user on 22.11.2025.
+//
+
+#ifndef DOMINOCPP_STATISTICS_H
+#define DOMINOCPP_STATISTICS_H
+
+#endif //DOMINOCPP_STATISTICS_H
