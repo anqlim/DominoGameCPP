@@ -1,5 +1,7 @@
 #include "bot.h"
 
+double simulateGameTime = 0.0;
+
 namespace {
     void findCandidates(Field &field, Node *head, std::vector<Tile> &candidates) {
         Node *current = head;
@@ -109,11 +111,13 @@ void Bot::move(Field& field, int userCount) {
     for (auto& candidate : candidates) {
         int wins = 0;
 
-        for (int i(0); i < ITERS; i++){
+        for (int i(0); i < ITERS; i++) {
+            std::vector<Tile> unknownCopy = unknown;
+            shuffleSet(unknownCopy);
             Bot botCopy = static_cast<Bot>(this->copy());
             Field fieldCopy = field.copy();
 
-            Node* current = botCopy.head;
+            Node *current = botCopy.head;
             while (current) {
                 if (current->tile == candidate) break;
                 current = current->next;
@@ -121,13 +125,15 @@ void Bot::move(Field& field, int userCount) {
             botCopy.exception(current);
             place(fieldCopy, current);
 
-            shuffleSet(unknown);
             User userCopy;
-            dealTiles(userCopy, unknown, userCount);
+            dealTiles(userCopy, unknownCopy, userCount);
 
-            if (simulateGame(unknown, userCopy, botCopy, fieldCopy, rng))
+            double start = GetTime(), end;
+            if (simulateGame(unknownCopy, userCopy, botCopy, fieldCopy, rng)) {
+                end = GetTime();
+                simulateGameTime = ((end - start) > simulateGameTime) ? (end - start) : simulateGameTime;
                 wins++;
-
+            }
         }
         if (wins > mx) {
             mx = wins;

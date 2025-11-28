@@ -13,6 +13,8 @@
 #include "set.h"
 #include "statistics.h"
 
+extern double moveTime;
+
 class Game {
 private:
     User user;
@@ -27,6 +29,7 @@ public:
     void draw();
     void manage(State& state, Result& res, Statistics& statistics);
     void reset();
+    void end(Result& res, Statistics& statistics);
 };
 
 #endif

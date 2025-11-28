@@ -1,5 +1,7 @@
 #include "game.h"
 
+double moveTime = 0.0;
+
 Game::Game():bazaar({1570, 30, 200, 200},
                     FIREBRICK, "bazaar", BARNRED),
                     exit({1770, 970, 30, 30},
@@ -16,30 +18,30 @@ void Game::draw() {
 }
 void Game::manage(State& state, Result& res, Statistics& statistics) {
     draw();
-    if (!user.head || !bot.head || (set.empty() && user.noSolutions(field) && bot.noSolutions(field))) {
-        statistics.games++;
-        statistics.wins = (res == WIN) ? statistics.wins + 1 : statistics.wins;
-        statistics.recalculatePercentage();
-        statistics.points = bot.points();
-        if (statistics.points > statistics.record)
-            statistics.record = statistics.points;
-        statistics.save();
-        state = RECORDS;
-        reset();
-        return;
-    }
 
     if (state == BOT_MOVE) {
         if (bot.noSolutions(field)) {
+            if (set.empty() && user.noSolutions(field)) {
+                res = (user.countTiles() > bot.countTiles() || (user.countTiles() == bot.countTiles() && user.points() > bot.points())) ? LOSE : WIN;
+                state = RECORDS;
+                end(res, statistics);
+                return;
+            }
+
             dealTiles(bot, set, 1);
             if (bot.noSolutions(field)) {
                 state = USER_MOVE;
                 return;
             }
         }
+        double start = GetTime(), end;
         bot.move(field, user.countTiles());
+        end = GetTime();
+        moveTime = ((end - start) > moveTime) ? (end - start) : moveTime;
         if (bot.head == nullptr) {
             res = LOSE;
+            state = RECORDS;
+            this->end(res, statistics);
             return;
         }
         state = USER_MOVE;
@@ -51,6 +53,8 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
         if (bazaar.isClicked(mouse.x, mouse.y) && user.noSolutions(field)) {
             if (set.empty() && bot.noSolutions(field)) {
                 res = (user.countTiles() > bot.countTiles() || (user.countTiles() == bot.countTiles() && user.points() > bot.points())) ? LOSE : WIN;
+                state = RECORDS;
+                end(res, statistics);
                 return;
             }
 
@@ -78,6 +82,7 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
                 selected->prev = nullptr;
                 field.head = selected;
                 selected = nullptr;
+                state = BOT_MOVE;
             }
             else if (match(selected->tile, field.tail->tile.right)
                      && mouse.x > WINDOW_WIDTH / 2) {
@@ -89,12 +94,14 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
                 selected->next = nullptr;
                 field.tail = selected;
                 selected = nullptr;
+                state = BOT_MOVE;
             }
             if (user.head == nullptr) {
                 res = WIN;
+                state = RECORDS;
+                end(res, statistics);
                 return;
             }
-            state = BOT_MOVE;
         }
     }
 }
@@ -105,5 +112,16 @@ void Game::reset() {
     field = Field();
     set.clear();
     initSet(set, user, bot, field);
+}
+
+void Game::end (Result& res, Statistics& statistics) {
+    statistics.games++;
+    if (res == WIN) statistics.wins++;
+    statistics.recalculatePercentage();
+    statistics.points = bot.points();
+    if (statistics.points > statistics.record)
+        statistics.record = statistics.points;
+    statistics.save();
+    reset();
 }
 

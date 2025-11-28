@@ -1,5 +1,6 @@
 #ifndef BOT_H
 #define BOT_H
+#include <iostream>
 #include <random>
 #include <algorithm>
 #include <vector>
@@ -8,7 +9,9 @@
 #include "parameters.h"
 #include "player.h"
 #include "set.h"
-#define ITERS 100
+#define ITERS 1000
+
+extern double simulateGameTime;
 
 class Bot:public Player {
 public:
