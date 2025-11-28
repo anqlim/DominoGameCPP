@@ -1,5 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+#include <vector>
 #include "list.h"
 #include "field.h"
 #include "tile.h"
@@ -8,31 +9,23 @@
 #define USER_X 50
 #define USER_Y 50
 #define BOT_X 50
-#define BOT_Y 800
+#define BOT_Y 830
 
-bool match(Tile& tile, int val);
-
-class Player {
+class Player:public List {
 public:
-    Node* head;
-    Node* tail;
-    Player();
-    ~Player();
-    bool noSolutions(Field& field);
+    bool noSolutions(Field& field) const;
     void exception(Node* selected);
-    int points();
-};
-
-class Bot:public Player {
-public:
-    void move();
-    void draw();
+    int points() const;
+    int countTiles() const;
+    Player copy();
 };
 
 class User:public Player {
 public:
     Node* clicked(float mouseX, float mouseY);
-    void draw();
+    void draw(Node* selected);
 };
+
+bool match(Tile& tile, int val);
 
 #endif

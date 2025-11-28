@@ -4,10 +4,11 @@ project(dominoCPP)
 set(CMAKE_CXX_STANDARD 20)
 
 set(RAYLIB_PATH "${PROJECT_SOURCE_DIR}/raylib")
-
 include_directories(${RAYLIB_PATH}/include)
-
 link_directories(${RAYLIB_PATH}/lib)
+
+set(JSON_PATH "${PROJECT_SOURCE_DIR}/json")
+include_directories(${JSON_PATH}/include)
 
 add_executable(${PROJECT_NAME} main.cpp
         parameters.h
@@ -29,6 +30,10 @@ add_executable(${PROJECT_NAME} main.cpp
         menu.h
         records.cpp
         records.h
+        statistics.cpp
+        statistics.h
+        bot.cpp
+        bot.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)

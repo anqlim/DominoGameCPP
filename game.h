@@ -3,18 +3,20 @@
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <string>
 #include "raylib.h"
 #include "parameters.h"
 #include "player.h"
+#include "bot.h"
 #include "field.h"
 #include "button.h"
 #include "set.h"
-
-void delay(double seconds);
+#include "statistics.h"
 
 class Game {
 private:
     User user;
+    Node* selected;
     Bot bot;
     Field field;
     std::vector<Tile> set;
@@ -23,8 +25,8 @@ private:
 public:
     Game();
     void draw();
-    void manage(State& state, Result& res);
-    void end();
+    void manage(State& state, Result& res, Statistics& statistics);
+    void reset();
 };
 
 #endif

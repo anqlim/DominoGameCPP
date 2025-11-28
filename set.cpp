@@ -1,4 +1,5 @@
 #include "set.h"
+#include "bot.h"
 
 void initSet(std::vector<Tile>& set, User& user, Bot& bot, Field& field) {
     createSet(set);
@@ -20,9 +21,17 @@ void shuffleSet(std::vector<Tile>& set) {
         set[j] = temp;
     }
 }
-void dealTiles(Player& player, std::vector<Tile>& set, int num) {
+void dealTiles(List& list, std::vector<Tile>& set, int num) {
     for (int i = 0; i < num && set.size() > 0; i++) {
-        player.head->add(set.back());
+        if (list.head) {
+            list.head->add(set.back());
+            list.head = list.head->prev;
+        }
+        else {
+            Node* newNode = new Node(set.back());
+            list.head = newNode;
+            list.tail = newNode;
+        }
         set.pop_back();
     }
 }

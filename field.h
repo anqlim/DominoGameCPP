@@ -1,13 +1,11 @@
 #ifndef FIELD_H
 #define FIELD_H
 #include "list.h"
+#include "parameters.h"
 
-class Field {
+class Field:public List {
 public:
-    Field();
-    ~Field();
-    Node* head;
-    Node* tail;
+    Field copy();
     void draw();
 };
 

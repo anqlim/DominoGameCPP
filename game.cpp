@@ -1,43 +1,56 @@
 #include "game.h"
 
-Game::Game():bazaar(Rectangle{1500, 100, 200, 200},
+Game::Game():bazaar({1570, 30, 200, 200},
                     FIREBRICK, "bazaar", BARNRED),
-                    exit(Rectangle{1770, 970, 30, 30},
+                    exit({1770, 970, 30, 30},
                          FIREBRICK, "x", BARNRED){
     initSet(set, user, bot, field);
 }
 void Game::draw() {
-    user.draw();
+    user.draw(selected);
     bot.draw();
     field.draw();
     bazaar.draw();
+    DrawText(std::to_string(set.size()).data(), 1655, WINDOW_HEIGHT - 100, 50, BARNRED);
     exit.draw();
 }
-void Game::manage(State& state, Result& res) {
-    this->draw();
+void Game::manage(State& state, Result& res, Statistics& statistics) {
+    draw();
+    if (!user.head || !bot.head || (set.empty() && user.noSolutions(field) && bot.noSolutions(field))) {
+        statistics.games++;
+        statistics.wins = (res == WIN) ? statistics.wins + 1 : statistics.wins;
+        statistics.recalculatePercentage();
+        statistics.points = bot.points();
+        if (statistics.points > statistics.record)
+            statistics.record = statistics.points;
+        statistics.save();
+        state = RECORDS;
+        reset();
+        return;
+    }
 
     if (state == BOT_MOVE) {
-        delay(1);
-        bot.move();
+        if (bot.noSolutions(field)) {
+            dealTiles(bot, set, 1);
+            if (bot.noSolutions(field)) {
+                state = USER_MOVE;
+                return;
+            }
+        }
+        bot.move(field, user.countTiles());
         if (bot.head == nullptr) {
-            delay(1);
-            state = RECORDS;
             res = LOSE;
             return;
         }
         state = USER_MOVE;
     }
-
     else if (state == USER_MOVE) {
         if (!IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return;
         Vector2 mouse = GetMousePosition();
-        mouse.y = WINDOW_HEIGHT - mouse.y;
 
         if (bazaar.isClicked(mouse.x, mouse.y) && user.noSolutions(field)) {
             if (set.empty() && bot.noSolutions(field)) {
-                delay(1);
-                state = RECORDS;
-                res = (user.points() > bot.points()) ? LOSE : WIN;
+                res = (user.countTiles() > bot.countTiles() || (user.countTiles() == bot.countTiles() && user.points() > bot.points())) ? LOSE : WIN;
                 return;
             }
 
@@ -51,45 +64,46 @@ void Game::manage(State& state, Result& res) {
             state = MENU;
             return;
         }
-        else {
-            static Node* selected = nullptr;
-            if (!selected) //выбор костяшки
-                selected = user.clicked(mouse.x, mouse.y);
-
-            else { //вставка в поле
-                if (match(selected->tile, field.head->tile.left)
-                && mouse.x < WINDOW_WIDTH / 2 ) {
-                    user.exception(selected);
-                    if (field.head->tile.left != selected->tile.right)
-                        selected->tile.swap();
-                    field.head->prev = selected;
-                    selected->next = field.head;
-                    selected->prev = nullptr;
-                    field.head = selected;
-                }
-                else if (match(selected->tile, field.tail->tile.right)
-                    && mouse.x > WINDOW_WIDTH / 2 ) {
-                    user.exception(selected);
-                    if (field.tail->tile.right != selected->tile.left)
-                        selected->tile.swap();
-                    field.tail->next = selected;
-                    selected->prev = field.tail;
-                    selected->next = nullptr;
-                    field.tail = selected;
-                }
-
-                if (user.head == nullptr) {
-                    delay(1);
-                    state = RECORDS;
-                    res = WIN;
-                    return;
-                }
+        else if (user.clicked(mouse.x, WINDOW_HEIGHT - mouse.y)){
+            selected = user.clicked(mouse.x, WINDOW_HEIGHT - mouse.y);
+        }
+        else if (selected){
+            if (match(selected->tile, field.head->tile.left)
+                && mouse.x < WINDOW_WIDTH / 2) {
+                user.exception(selected);
+                if (field.head->tile.left != selected->tile.right)
+                    selected->tile.swap();
+                field.head->prev = selected;
+                selected->next = field.head;
+                selected->prev = nullptr;
+                field.head = selected;
+                selected = nullptr;
             }
+            else if (match(selected->tile, field.tail->tile.right)
+                     && mouse.x > WINDOW_WIDTH / 2) {
+                user.exception(selected);
+                if (field.tail->tile.right != selected->tile.left)
+                    selected->tile.swap();
+                field.tail->next = selected;
+                selected->prev = field.tail;
+                selected->next = nullptr;
+                field.tail = selected;
+                selected = nullptr;
+            }
+            if (user.head == nullptr) {
+                res = WIN;
+                return;
+            }
+            state = BOT_MOVE;
         }
     }
 }
 
-void delay(double seconds) {
-    std::this_thread::sleep_for(std::chrono::duration<double>(seconds));
+void Game::reset() {
+    user = User();
+    bot = Bot();
+    field = Field();
+    set.clear();
+    initSet(set, user, bot, field);
 }
 

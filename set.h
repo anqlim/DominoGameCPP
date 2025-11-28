@@ -6,7 +6,9 @@
 #include "player.h"
 #include "field.h"
 
-void dealTiles(Player& player, std::vector<Tile>& set, int num);
+class Bot;
+
+void dealTiles(List& list, std::vector<Tile>& set, int num);
 void shuffleSet(std::vector<Tile>& set);
 void createSet(std::vector<Tile>& set);
 void initSet(std::vector<Tile>& set, User& user, Bot& bot, Field& field);

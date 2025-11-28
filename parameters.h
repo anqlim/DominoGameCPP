@@ -1,5 +1,5 @@
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
+#ifndef PARAMETERS_H
+#define PARAMETERS_H
 
 //window
 #define WINDOW_WIDTH 1800

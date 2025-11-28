@@ -8,8 +8,15 @@ public:
     Node* prev;
     Node* next;
     Node(Tile _tile);
-    void remove();
     void add(Tile& tile);
+};
+
+class List {
+public:
+    Node* head;
+    Node* tail;
+    List();
+    ~List();
 };
 
 #endif

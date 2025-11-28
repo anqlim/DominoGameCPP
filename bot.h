@@ -1,14 +1,19 @@
-//
-// Created by user on 22.11.2025.
-//
+#ifndef BOT_H
+#define BOT_H
+#include <random>
+#include <algorithm>
+#include <vector>
+#include <chrono>
+#include "raylib.h"
+#include "parameters.h"
+#include "player.h"
+#include "set.h"
+#define ITERS 100
 
-#ifndef DOMINOCPP_BOT_H
-#define DOMINOCPP_BOT_H
-
-
-class bot {
-
+class Bot:public Player {
+public:
+    void move(Field& field, int userCount);
+    void draw();
 };
 
-
-#endif //DOMINOCPP_BOT_H
+#endif

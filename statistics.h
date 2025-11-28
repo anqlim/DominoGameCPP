@@ -1,8 +1,26 @@
-//
-// Created by user on 22.11.2025.
-//
+#ifndef STATISTICS_H
+#define STATISTICS_H
+#include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
-#ifndef DOMINOCPP_STATISTICS_H
-#define DOMINOCPP_STATISTICS_H
+using json = nlohmann::json;
 
-#endif //DOMINOCPP_STATISTICS_H
+class Statistics {
+public:
+    static const std::string FILE_NAME;
+    int record;
+    int points;
+    int winningPercentage;
+    int games;
+    int wins;
+
+    Statistics();
+    void save();
+    void load();
+    void recalculatePercentage();
+};
+
+#endif

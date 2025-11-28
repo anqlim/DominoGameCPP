@@ -3,14 +3,16 @@
 #include "parameters.h"
 
 Tile::Tile(int _left, int _right) : left(_left), right(_right) {}
-
+bool Tile::operator==(const Tile& other) const {
+    return (left == other.left && right == other.right) ||
+           (left == other.right && right == other.left);
+}
 void Tile::swap() {
     int temp = left;
     left = right;
     right = temp;
 }
-
-void drawDots(int x, int y, int value, Position position) {
+void drawDots(float x, float y, int value, Position position, float k = 1) {
     Vector2 positions[7][6] = {
             {},
             {{30, 30}},
@@ -31,26 +33,44 @@ void drawDots(int x, int y, int value, Position position) {
     }
 
     for (int i = 0; i < value && i < 6; ++i) {
-        int dotX = x + positions[value][i].x;
-        int dotY = y + positions[value][i].y;
-        DrawCircle(dotX, dotY, TILE_HEIGHT / 12, PRUSSIANBLUE);
+        int dotX = x + positions[value][i].x * k;
+        int dotY = y + positions[value][i].y * k;
+        DrawCircle(dotX, dotY, TILE_HEIGHT / 12 * k, PRUSSIANBLUE);
     }
 }
-
-void Tile::draw(int x, int y, Position position) {
+void Tile::draw(float x, float y, Position position, float width, float height) {
     y = WINDOW_HEIGHT - y;
     if (position == horizontal) {
-        DrawRectangle(x, y, TILE_WIDTH, TILE_HEIGHT, PAPAYAWHIP);
-        DrawRectangleLines(x, y, TILE_WIDTH / 2, TILE_HEIGHT, PRUSSIANBLUE);
-        DrawRectangleLines(x + TILE_WIDTH / 2, y, TILE_WIDTH / 2, TILE_HEIGHT, PRUSSIANBLUE);
-        drawDots(x, y, left, position);
-        drawDots(x + TILE_WIDTH / 2, y, right, position);
+        DrawRectangle(x, y - height, width, height, PAPAYAWHIP);
+        DrawRectangleLines(x, y - height, width / 2, height, PRUSSIANBLUE);
+        DrawRectangleLines(x + width / 2, y - height, width / 2, height, PRUSSIANBLUE);
+        drawDots(x, y - height, left, position, (float)width / TILE_WIDTH);
+        drawDots(x + width / 2, y - height, right, position, (float)width / TILE_WIDTH);
     }
     else if (position == vertical){
-        DrawRectangle(x, y, TILE_HEIGHT, TILE_WIDTH, PAPAYAWHIP);
-        DrawRectangleLines(x, y, TILE_HEIGHT, TILE_WIDTH / 2, PRUSSIANBLUE);
-        DrawRectangleLines(x, y + TILE_WIDTH / 2, TILE_HEIGHT, TILE_WIDTH / 2, PRUSSIANBLUE);
-        drawDots(x, y, left, position);
-        drawDots(x, y + TILE_WIDTH / 2, right, position);
+        DrawRectangle(x, y - width, height, width, PAPAYAWHIP);
+        DrawRectangleLines(x, y - width, height, width / 2, PRUSSIANBLUE);
+        DrawRectangleLines(x, y - width + width / 2, height, width / 2, PRUSSIANBLUE);
+        drawDots(x, y - width, left, position, (float)width / TILE_WIDTH);
+        drawDots(x, y - width + width / 2, right, position, (float)width / TILE_WIDTH);
+    }
+}
+void Tile::drawSelected(float x, float y, Position position) {
+    y = WINDOW_HEIGHT - y;
+    if (position == horizontal) {
+        DrawRectangle(x - TILE_HEIGHT / 12, y - TILE_HEIGHT - TILE_HEIGHT / 12, TILE_WIDTH + TILE_HEIGHT / 6, TILE_HEIGHT + TILE_HEIGHT / 6, PRUSSIANBLUE);
+        DrawRectangle(x, y - TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, PAPAYAWHIP);
+        DrawRectangleLines(x, y - TILE_HEIGHT, TILE_WIDTH / 2, TILE_HEIGHT, PRUSSIANBLUE);
+        DrawRectangleLines(x + TILE_WIDTH / 2, y - TILE_HEIGHT, TILE_WIDTH / 2, TILE_HEIGHT, PRUSSIANBLUE);
+        drawDots(x, y - TILE_HEIGHT, left, position);
+        drawDots(x + TILE_WIDTH / 2, y - TILE_HEIGHT, right, position);
+    }
+    else if (position == vertical){
+        DrawRectangle(x - TILE_HEIGHT / 12, y - TILE_WIDTH - TILE_HEIGHT / 12, TILE_HEIGHT + TILE_HEIGHT / 6, TILE_WIDTH + TILE_HEIGHT / 6, PRUSSIANBLUE);
+        DrawRectangle(x, y - TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH, PAPAYAWHIP);
+        DrawRectangleLines(x, y - TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH / 2, PRUSSIANBLUE);
+        DrawRectangleLines(x, (y - TILE_WIDTH) + TILE_WIDTH / 2, TILE_HEIGHT, TILE_WIDTH / 2, PRUSSIANBLUE);
+        drawDots(x, (y - TILE_WIDTH), left, position);
+        drawDots(x, (y - TILE_WIDTH) + TILE_WIDTH / 2, right, position);
     }
 }

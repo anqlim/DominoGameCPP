@@ -1,14 +1,17 @@
 #ifndef RECORDS_H
 #define RECORDS_H
+#include "statistics.h"
 #include "parameters.h"
+#include "button.h"
 
 class Records {
-private:
-
 public:
+    Statistics statistics;
+    Button exit;
+
     Records();
     void manage(State& state, Result& res);
-    void draw();
+    void draw(Result& res);
 };
 
 #endif
