@@ -12,6 +12,7 @@
 #define ITERS 1000
 
 extern double simulateGameTime;
+extern double moveTime;
 
 class Bot:public Player {
 public:

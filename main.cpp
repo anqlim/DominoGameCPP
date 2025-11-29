@@ -4,8 +4,6 @@
 #include "records.h"
 #include "menu.h"
 
-double manageTime = 0.0;
-
 int main() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Domino");
 

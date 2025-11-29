@@ -13,7 +13,7 @@
 #include "set.h"
 #include "statistics.h"
 
-extern double moveTime;
+extern double manageTime;
 
 class Game {
 private:
