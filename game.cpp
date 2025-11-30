@@ -1,7 +1,5 @@
 #include "game.h"
 
-double manageTime = 0.0;
-
 Game::Game():bazaar({1570, 30, 200, 200},
                     FIREBRICK, "bazaar", BARNRED),
                     exit({1770, 970, 30, 30},
@@ -17,7 +15,7 @@ void Game::draw() {
     exit.draw();
 }
 void Game::manage(State& state, Result& res, Statistics& statistics) {
-    double start = GetTime(), finish;
+    PROFILE_SCOPE("game.manage()");
     draw();
 
     if (state == BOT_MOVE) {
@@ -26,16 +24,12 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
                 res = (user.countTiles() > bot.countTiles() || (user.countTiles() == bot.countTiles() && user.points() > bot.points())) ? LOSE : WIN;
                 state = RECORDS;
                 end(res, statistics);
-                finish = GetTime();
-                if (finish - start > manageTime) manageTime = finish - start;
                 return;
             }
 
             dealTiles(bot, set, 1);
             if (bot.noSolutions(field)) {
                 state = USER_MOVE;
-                finish = GetTime();
-                if (finish - start > manageTime) manageTime = finish - start;
                 return;
             }
         }
@@ -44,8 +38,6 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
             res = LOSE;
             state = RECORDS;
             end(res, statistics);
-            finish = GetTime();
-            if (finish - start > manageTime) manageTime = finish - start;
             return;
         }
         state = USER_MOVE;
@@ -59,23 +51,17 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
                 res = (user.countTiles() > bot.countTiles() || (user.countTiles() == bot.countTiles() && user.points() > bot.points())) ? LOSE : WIN;
                 state = RECORDS;
                 end(res, statistics);
-                finish = GetTime();
-                if (finish - start > manageTime) manageTime = finish - start;
                 return;
             }
 
             dealTiles(user, set, 1);
             if (!match(user.head->tile, field.head->tile.left) && !match(user.head->tile, field.tail->tile.right)) {
                 state = BOT_MOVE;
-                finish = GetTime();
-                if (finish - start > manageTime) manageTime = finish - start;
                 return;
             }
         }
         else if (exit.isClicked(mouse.x, mouse.y)) {
             state = MENU;
-            finish = GetTime();
-            if (finish - start > manageTime) manageTime = finish - start;
             return;
         }
         else if (user.clicked(mouse.x, WINDOW_HEIGHT - mouse.y)){
@@ -110,14 +96,10 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
                 res = WIN;
                 state = RECORDS;
                 end(res, statistics);
-                finish = GetTime();
-                if (finish - start > manageTime) manageTime = finish - start;
                 return;
             }
         }
     }
-    finish = GetTime();
-    if (finish - start > manageTime) manageTime = finish - start;
 }
 
 void Game::reset() {

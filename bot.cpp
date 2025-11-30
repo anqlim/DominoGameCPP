@@ -1,8 +1,5 @@
 #include "bot.h"
 
-double simulateGameTime = 0.0;
-double moveTime = 0.0;
-
 namespace {
     void findCandidates(Field &field, Node *head, std::vector<Tile> &candidates) {
         Node *current = head;
@@ -50,21 +47,13 @@ namespace {
         }
     }
 
-    bool simulateGame(std::vector<Tile> set, User& user, Bot& bot, Field& field, std::mt19937& rng) {
-        double start = GetTime(), finish;
+    bool simulateGame(std::vector<Tile> set, User& user, Bot& bot, Field& field) {
+        PROFILE_SCOPE("simulateGame()");
         bool botTurn = false;
 
         while (true) {
-            if (!bot.head) {
-                finish = GetTime();
-                if (finish - start > simulateGameTime) simulateGameTime = finish - start;
-                return true;
-            }
-            if (!user.head) {
-                finish = GetTime();
-                if (finish - start > simulateGameTime) simulateGameTime = finish - start;
-                return false;
-            }
+            if (!bot.head) return true;
+            if (!user.head) return false;
 
 
             Player &currentPlayer = botTurn ? (Player &) bot : (Player &) user;
@@ -73,8 +62,8 @@ namespace {
                 std::vector<Tile> candidates;
                 findCandidates(field, currentPlayer.head, candidates);
 
-                std::uniform_int_distribution<> dist(0, candidates.size() - 1);
-                Tile selected = candidates[dist(rng)];
+
+                Tile selected = candidates[rand() % (candidates.size())];
 
                 Node *current = currentPlayer.head;
                 while (current) {
@@ -98,15 +87,13 @@ namespace {
                 else break;
             }
         }
-        finish = GetTime();
-        if (finish - start > simulateGameTime) simulateGameTime = finish - start;
         return user.countTiles() > bot.countTiles() ||
                (user.countTiles() == bot.countTiles() && user.points() > bot.points());
     }
 }
 
 void Bot::move(Field& field, int userCount) {
-    double start = GetTime(), finish;
+    PROFILE_SCOPE("bot.move()");
 
     //Step 1
     std::vector<Tile> candidates;
@@ -118,7 +105,7 @@ void Bot::move(Field& field, int userCount) {
     deleteExisting(field, head, unknown);
 
     //Step 3
-    static std::mt19937 rng(std::random_device{}());
+    srand(static_cast<unsigned int>(1));
     int mx(-1);
     Tile best(candidates[0]);
 
@@ -142,10 +129,7 @@ void Bot::move(Field& field, int userCount) {
             User userCopy;
             dealTiles(userCopy, unknownCopy, userCount);
 
-            double start = GetTime(), end;
-            if (simulateGame(unknownCopy, userCopy, botCopy, fieldCopy, rng)) {
-                end = GetTime();
-                simulateGameTime = ((end - start) > simulateGameTime) ? (end - start) : simulateGameTime;
+            if (simulateGame(unknownCopy, userCopy, botCopy, fieldCopy)) {
                 wins++;
             }
         }
@@ -163,9 +147,6 @@ void Bot::move(Field& field, int userCount) {
     }
     exception(current);
     place(field, current);
-
-    finish = GetTime();
-    if (finish - start > moveTime) moveTime = finish - start;
 }
 
 void Bot::draw() {

@@ -9,10 +9,8 @@
 #include "parameters.h"
 #include "player.h"
 #include "set.h"
+#include "profile.h"
 #define ITERS 1000
-
-extern double simulateGameTime;
-extern double moveTime;
 
 class Bot:public Player {
 public:

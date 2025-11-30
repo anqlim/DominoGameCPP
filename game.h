@@ -13,8 +13,6 @@
 #include "set.h"
 #include "statistics.h"
 
-extern double manageTime;
-
 class Game {
 private:
     User user;
