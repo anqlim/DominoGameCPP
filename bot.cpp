@@ -2,9 +2,11 @@
 
 namespace {
     void findCandidates(Field &field, Node *head, std::vector<Tile> &candidates) {
+        int leftEnd = field.head->tile.left;
+        int rightEnd = field.tail->tile.right;
         Node *current = head;
         while (current) {
-            if (match(current->tile, field.head->tile.left) || match(current->tile, field.tail->tile.right))
+            if (match(current->tile, leftEnd) || match(current->tile, rightEnd))
                 candidates.push_back(current->tile);
             current = current->next;
         }
@@ -98,44 +100,50 @@ void Bot::move(Field& field, int userCount) {
     //Step 1
     std::vector<Tile> candidates;
     findCandidates(field, head, candidates);
-
-    //Step 2
-    std::vector<Tile> unknown;
-    createSet(unknown);
-    deleteExisting(field, head, unknown);
-
-    //Step 3
-    srand(static_cast<unsigned int>(1));
-    int mx(-1);
     Tile best(candidates[0]);
 
-    for (auto& candidate : candidates) {
-        int wins = 0;
+    if (candidates.size() != 1) {
+        //Step 2
+        std::vector<Tile> unknown;
+        createSet(unknown);
+        deleteExisting(field, head, unknown);
 
-        for (int i(0); i < ITERS; i++) {
-            std::vector<Tile> unknownCopy = unknown;
-            shuffleSet(unknownCopy);
-            Bot botCopy = static_cast<Bot>(this->copy());
-            Field fieldCopy = field.copy();
+        //Step 3
+        srand(static_cast<unsigned int>(SEED));
+        int mx(-1);
 
-            Node *current = botCopy.head;
-            while (current) {
-                if (current->tile == candidate) break;
-                current = current->next;
+        for (auto &candidate: candidates) {
+            int wins = 0;
+
+            for (int i(0); i < ITERS; i++) {
+                std::vector<Tile> unknownCopy = unknown;
+                shuffleSet(unknownCopy);
+
+                Bot botCopy;
+                botCopy.copy(*this);
+
+                Field fieldCopy;
+                fieldCopy.copy(field);
+
+                Node *current = botCopy.head;
+                while (current) {
+                    if (current->tile == candidate) break;
+                    current = current->next;
+                }
+                botCopy.exception(current);
+                place(fieldCopy, current);
+
+                User userCopy;
+                dealTiles(userCopy, unknownCopy, userCount);
+
+                if (simulateGame(unknownCopy, userCopy, botCopy, fieldCopy)) {
+                    wins++;
+                }
             }
-            botCopy.exception(current);
-            place(fieldCopy, current);
-
-            User userCopy;
-            dealTiles(userCopy, unknownCopy, userCount);
-
-            if (simulateGame(unknownCopy, userCopy, botCopy, fieldCopy)) {
-                wins++;
+            if (wins > mx) {
+                mx = wins;
+                best = candidate;
             }
-        }
-        if (wins > mx) {
-            mx = wins;
-            best = candidate;
         }
     }
 

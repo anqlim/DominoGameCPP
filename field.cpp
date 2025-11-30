@@ -1,23 +1,12 @@
 #include "field.h"
 
-Field Field::copy() {
-    Field copy;
-    Node *current = tail;
+void Field::copy(Field& other) {
+    Node* current = other.tail;
     while (current) {
-        if (copy.head) {
-            copy.head->add(current->tile);
-            copy.head = copy.head->prev;
-        }
-        else {
-            Node* newNode = new Node(current->tile);
-            copy.head = newNode;
-            copy.tail = newNode;
-        }
+        add(current->tile);
         current = current->prev;
     }
-    return copy;
 }
-
 void Field::draw() {
     Node* current = head;
     float count(0);

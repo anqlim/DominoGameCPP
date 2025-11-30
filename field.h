@@ -5,7 +5,7 @@
 
 class Field:public List {
 public:
-    Field copy();
+    void copy(Field& other);
     void draw();
 };
 

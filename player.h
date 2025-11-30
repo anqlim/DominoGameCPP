@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <vector>
+#include "profile.h"
 #include "list.h"
 #include "field.h"
 #include "tile.h"
@@ -17,7 +18,7 @@ public:
     void exception(Node* selected);
     int points() const;
     int countTiles() const;
-    Player copy();
+    void copy(Player& other);
 };
 
 class User:public Player {

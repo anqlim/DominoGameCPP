@@ -30,22 +30,13 @@ int Player::points() const{
     }
     return points;
 }
-Player Player::copy() {
-    Player copy;
-    Node* current = tail;
+void Player::copy(Player& other) {
+    PROFILE_SCOPE("player.copy()");
+    Node* current = other.tail;
     while (current) {
-        if (copy.head) {
-            copy.head->add(current->tile);
-            copy.head = copy.head->prev;
-        }
-        else {
-            Node* newNode = new Node(current->tile);
-            copy.head = newNode;
-            copy.tail = newNode;
-        }
+        add(current->tile);
         current = current->prev;
     }
-    return copy;
 }
 Node* User::clicked(float mouseX, float mouseY) {
     Node* current = head;

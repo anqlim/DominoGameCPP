@@ -1,21 +1,15 @@
 #include "list.h"
 
-Node::Node(Tile _tile):tile(_tile){
+Node::Node(Tile _tile):tile(_tile) {
     prev = nullptr;
     next = nullptr;
 };
 
-void Node::add(Tile& tile){
-    Node* node = new Node(tile);
-    prev = node;
-    node->next = this;
-}
-
-List::List(){
+List::List() {
     head = nullptr;
     tail = nullptr;
 }
-List::~List(){
+List::~List() {
     Node* current = head;
     while (current != nullptr) {
         Node* next = current->next;
@@ -25,4 +19,13 @@ List::~List(){
     head = nullptr;
     tail = nullptr;
 }
-
+void List::add(Tile tile) {
+    PROFILE_SCOPE("list.add(tile)");
+    if (!head) {
+        head = tail = new Node(tile);
+        return;
+    }
+    head->prev = new Node(tile);
+    head->prev->next = head;
+    head = head->prev;
+}

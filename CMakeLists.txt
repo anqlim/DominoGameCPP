@@ -3,8 +3,6 @@ project(dominoCPP)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g")
-
 set(RAYLIB_PATH "${PROJECT_SOURCE_DIR}/raylib")
 include_directories(${RAYLIB_PATH}/include)
 link_directories(${RAYLIB_PATH}/lib)

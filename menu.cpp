@@ -13,7 +13,7 @@ void Menu::manage(State& state) {
     draw();
     if (!IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return;
     Vector2 mouse = GetMousePosition();
-    srand(static_cast<unsigned int>(1));
+    srand(static_cast<unsigned int>(SEED));
 
     if (play.isClicked(mouse.x, mouse.y))
         state = (rand() % 2) ? USER_MOVE : BOT_MOVE;
