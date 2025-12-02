@@ -28,7 +28,7 @@ namespace {
         }
     }
 
-    void place(Field &field, Node* selected) {
+    void place(Field &field, Node *selected) {
         if (match(selected->tile, field.head->tile.left)) {
             if (field.head->tile.left != selected->tile.right)
                 selected->tile.swap();
@@ -37,8 +37,7 @@ namespace {
             selected->prev = nullptr;
             field.head = selected;
             return;
-        }
-        else if (match(selected->tile, field.tail->tile.right)) {
+        } else if (match(selected->tile, field.tail->tile.right)) {
             if (field.tail->tile.right != selected->tile.left)
                 selected->tile.swap();
             field.tail->next = selected;
@@ -49,32 +48,30 @@ namespace {
         }
     }
 
-    bool simulateGame(std::vector<Tile> set, User& user, Bot& bot, Field& field) {
-        PROFILE_SCOPE("simulateGame()");
-        bool botTurn = false;
+    bool simulateGameMCTS(std::vector<Tile> set, User& user, Bot& bot, Field& field) {
+        PROFILE_SCOPE("simulateGameMCTS()");
 
-        while (true) {
+        bool botTurn = false;
+        const int MAX_MOVES = 10;
+        int moves = 0;
+
+        while (moves++ < MAX_MOVES) {
             if (!bot.head) return true;
             if (!user.head) return false;
-
 
             Player &currentPlayer = botTurn ? (Player &) bot : (Player &) user;
 
             if (!currentPlayer.noSolutions(field)) {
                 std::vector<Tile> candidates;
                 findCandidates(field, currentPlayer.head, candidates);
-
-
-                Tile selected = candidates[rand() % (candidates.size())];
+                Tile selected = candidates[rand() % candidates.size()];
 
                 Node *current = currentPlayer.head;
-                while (current) {
-                    if (current->tile == selected) break;
-                    current = current->next;
-                }
+                while (current && current->tile != selected) current = current->next;
+                if (!current) break;
+
                 currentPlayer.exception(current);
                 place(field, current);
-
                 botTurn = !botTurn;
                 continue;
             }
@@ -89,8 +86,110 @@ namespace {
                 else break;
             }
         }
+
         return user.countTiles() > bot.countTiles() ||
                (user.countTiles() == bot.countTiles() && user.points() > bot.points());
+    }
+
+    Tile selectMoveMCTS(Bot &bot, Field &field, const std::vector<Tile> &unknown, int userCount) {
+        PROFILE_SCOPE("selectMoveMCTS()");
+
+        std::vector<Tile> rootCandidates;
+        findCandidates(field, bot.head, rootCandidates);
+
+        std::vector<std::unique_ptr<MCTSNode>> rootChildren;
+
+        for (const auto &candidate: rootCandidates) {
+            auto child = std::make_unique<MCTSNode>();
+
+            child->botState.copy(bot);
+            child->fieldState.copy(field);
+
+            Node *current = child->botState.head;
+            while (current && current->tile != candidate) {
+                current = current->next;
+            }
+            if (!current) continue;
+
+            child->botState.exception(current);
+            place(child->fieldState, current);
+
+            child->move = candidate;
+            rootChildren.push_back(std::move(child));
+        }
+
+        if (rootChildren.empty()) return rootCandidates[0];
+
+        for (int iter = 0; iter < ITERS; ++iter) {
+            std::vector<MCTSNode *> path;
+            MCTSNode *node = nullptr;
+            double bestScore = -1;
+
+            for (auto &child: rootChildren) {
+                double score = child->ucb1(ITERS);
+                if (score > bestScore) {
+                    bestScore = score;
+                    node = child.get();
+                }
+            }
+            if (!node) node = rootChildren[0].get();
+            path.push_back(node);
+
+            if (node->children.empty()) {
+                std::vector<Tile> candidates;
+                findCandidates(node->fieldState, node->botState.head, candidates);
+
+                for (const auto &cand: candidates) {
+                    auto grandchild = std::make_unique<MCTSNode>();
+                    grandchild->botState.copy(node->botState);
+                    grandchild->fieldState.copy(node->fieldState);
+
+                    Node *cur = grandchild->botState.head;
+                    while (cur && cur->tile != cand) cur = cur->next;
+                    if (!cur) continue;
+
+                    grandchild->botState.exception(cur);
+                    place(grandchild->fieldState, cur);
+                    grandchild->move = cand;
+
+                    node->children.push_back(std::move(grandchild));
+                }
+            }
+
+            bool simulationResult = false;
+            if (!node->children.empty()) {
+                auto &simChild = node->children[rand() % node->children.size()];
+                std::vector<Tile> simUnknown = unknown;
+                shuffleSet(simUnknown);
+                User userCopy;
+                dealTiles(userCopy, simUnknown, userCount);
+                simulationResult = simulateGameMCTS(simUnknown, userCopy, simChild->botState, simChild->fieldState);
+                path.push_back(simChild.get());
+            }
+            else {
+                std::vector<Tile> simUnknown = unknown;
+                shuffleSet(simUnknown);
+                User userCopy;
+                dealTiles(userCopy, simUnknown, userCount);
+                simulationResult = simulateGameMCTS(simUnknown, userCopy, node->botState, node->fieldState);
+            }
+
+            // BACKPROPAGATION
+            for (auto *n: path) {
+                n->visits++;
+                if (simulationResult) n->wins++;
+            }
+        }
+
+        // Выбор по посещениям
+        MCTSNode *best = rootChildren[0].get();
+        for (auto &child: rootChildren) {
+            if (child->visits > best->visits) {
+                best = child.get();
+            }
+        }
+
+        return best->move;
     }
 }
 
@@ -110,41 +209,7 @@ void Bot::move(Field& field, int userCount) {
 
         //Step 3
         srand(static_cast<unsigned int>(SEED));
-        int mx(-1);
-
-        for (auto &candidate: candidates) {
-            int wins = 0;
-
-            for (int i(0); i < ITERS; i++) {
-                std::vector<Tile> unknownCopy = unknown;
-                shuffleSet(unknownCopy);
-
-                Bot botCopy;
-                botCopy.copy(*this);
-
-                Field fieldCopy;
-                fieldCopy.copy(field);
-
-                Node *current = botCopy.head;
-                while (current) {
-                    if (current->tile == candidate) break;
-                    current = current->next;
-                }
-                botCopy.exception(current);
-                place(fieldCopy, current);
-
-                User userCopy;
-                dealTiles(userCopy, unknownCopy, userCount);
-
-                if (simulateGame(unknownCopy, userCopy, botCopy, fieldCopy)) {
-                    wins++;
-                }
-            }
-            if (wins > mx) {
-                mx = wins;
-                best = candidate;
-            }
-        }
+        best = selectMoveMCTS(*this, field, unknown, userCount);
     }
 
     //Step 4
@@ -167,3 +232,11 @@ void Bot::draw() {
         current = current->next;
     }
 }
+
+double MCTSNode::ucb1(int parentVisits) const {
+    if (visits == 0) return INFINITY;
+    double exploitation = static_cast<double>(wins) / visits;
+    double exploration = sqrt(2.0 * log(parentVisits) / visits);
+    return exploitation + exploration;
+}
+

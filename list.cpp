@@ -20,7 +20,6 @@ List::~List() {
     tail = nullptr;
 }
 void List::add(Tile tile) {
-    PROFILE_SCOPE("list.add(tile)");
     if (!head) {
         head = tail = new Node(tile);
         return;
