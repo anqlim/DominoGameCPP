@@ -24,3 +24,4 @@ void Button::draw() {
     auto [x, y, size] = buttonTextSize(rec.width, rec.height, text.length());
     DrawText(text.data(), x + rec.x, y + rec.y, size, textColor);
 }
+

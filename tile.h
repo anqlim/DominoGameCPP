@@ -1,5 +1,10 @@
 #ifndef TILE_H
 #define TILE_H
+#include <unordered_map>
+#include "raylib.h"
+#include "parameters.h"
+#include "profile.h"
+#include "textures.h"
 
 #define TILE_WIDTH (float)120
 #define TILE_HEIGHT (float)60
@@ -13,8 +18,8 @@ public:
     Tile(int _left, int _right);
     bool operator==(const Tile& other) const;
     void swap();
-    void draw(float x, float y, Position position, float width = TILE_WIDTH, float height = TILE_HEIGHT);
-    void drawSelected(float x, float y, Position position);
+    void draw(float x, float y, float width = TILE_WIDTH, float height = TILE_HEIGHT);
+    void drawTexture(float x, float y, Position position, bool isSelected, float width = TILE_WIDTH, float height = TILE_HEIGHT);
 };
 
 #endif

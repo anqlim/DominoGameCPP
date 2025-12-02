@@ -36,6 +36,8 @@ add_executable(${PROJECT_NAME} main.cpp
         bot.h
         profile.cpp
         profile.h
+        textures.cpp
+        textures.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)

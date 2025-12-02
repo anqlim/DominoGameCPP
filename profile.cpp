@@ -21,7 +21,7 @@ void Profiler::print() {
     std::cout << "\n=== PROFILING RESULTS ===\n";
     for (const auto& [name, entry] : entries_) {
         double avg_ms = (entry.total_time / entry.calls) * 1000.0;
-        std::cout << std::left << std::setw(15) << name
+        std::cout << std::left << std::setw(20) << name
                   << " | total: " << std::fixed << std::setprecision(6) << std::setw(10) << entry.total_time << " s"
                   << " | calls: " << std::setw(5) << entry.calls
                   << " | avg: " << std::setw(10) << avg_ms << " ms\n";

@@ -8,11 +8,12 @@ void Field::copy(Field& other) {
     }
 }
 void Field::draw() {
+    PROFILE_SCOPE("field.draw()");
     Node* current = head;
     float count(0);
     while (current) {
         if (current->tile.left == current->tile.right) count += 0.5;
-        else count += 1;
+        else count++;
         current = current->next;
     }
 
@@ -31,11 +32,11 @@ void Field::draw() {
     current = head;
     while (current) {
         if (current->tile.left == current->tile.right) {
-            current->tile.draw(x, y - height / 2, vertical, width, height);
+            current->tile.drawTexture(x, y - height / 2, vertical, false, width, height);
             x += height;
         }
         else {
-            current->tile.draw(x, y, horizontal, width, height);
+            current->tile.drawTexture(x + width + 1, y, horizontal, false, width, height);
             x += width;
         }
         current = current->next;

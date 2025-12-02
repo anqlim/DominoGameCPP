@@ -1,17 +1,18 @@
 #include "game.h"
 
-Game::Game():bazaar({1570, 30, 200, 200},
+Game::Game():bazaar({1550, 50, 200, 200},
                     FIREBRICK, "bazaar", BARNRED),
                     exit({1770, 970, 30, 30},
                          FIREBRICK, "x", BARNRED){
     initSet(set, user, bot, field);
 }
 void Game::draw() {
+    PROFILE_SCOPE("game.draw()");
     user.draw(selected);
     bot.draw();
     field.draw();
     bazaar.draw();
-    DrawText(std::to_string(set.size()).data(), 1655, WINDOW_HEIGHT - 100, 50, BARNRED);
+    DrawText(std::to_string(set.size()).data(), 1630, WINDOW_HEIGHT - 120, 50, BARNRED);
     exit.draw();
 }
 void Game::manage(State& state, Result& res, Statistics& statistics) {
@@ -28,7 +29,7 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
             }
 
             dealTiles(bot, set, 1);
-            if (bot.noSolutions(field)) {
+            if (!match(bot.head->tile, field.head->tile.left) && !match(bot.head->tile, field.tail->tile.right)) {
                 state = USER_MOVE;
                 return;
             }
@@ -47,6 +48,7 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
         Vector2 mouse = GetMousePosition();
 
         if (bazaar.isClicked(mouse.x, mouse.y) && user.noSolutions(field)) {
+            selected = nullptr;
             if (set.empty() && bot.noSolutions(field)) {
                 res = (user.countTiles() > bot.countTiles() || (user.countTiles() == bot.countTiles() && user.points() > bot.points())) ? LOSE : WIN;
                 state = RECORDS;

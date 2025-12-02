@@ -3,6 +3,7 @@
 #include <string>
 #include "raylib.h"
 #include "parameters.h"
+#include "textures.h"
 
 class Button {
 private:

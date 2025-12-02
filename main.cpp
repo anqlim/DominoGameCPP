@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "textures.h"
 #include "parameters.h"
 #include "game.h"
 #include "records.h"
@@ -7,12 +8,15 @@
 
 int main() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Domino");
+    SetTargetFPS(60);
 
     State state(MENU);
     Result result(DEFAULT);
     Game game;
     Menu menu;
     Records records;
+
+    generateTextures();
 
     while (!WindowShouldClose()) {
         ClearBackground(GRAYISHBLUE);
