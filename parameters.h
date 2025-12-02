@@ -5,8 +5,8 @@
 #define SEED 1
 
 //window
-#define WINDOW_WIDTH 1800
-#define WINDOW_HEIGHT 1000
+constexpr int WINDOW_WIDTH = 1800;
+constexpr int WINDOW_HEIGHT = 1000;
 
 //colors
 #define BARNRED (Color){120, 0, 0, 255}

@@ -6,8 +6,8 @@
 #include "profile.h"
 #include "textures.h"
 
-#define TILE_WIDTH (float)120
-#define TILE_HEIGHT (float)60
+constexpr float TILE_WIDTH = 120;
+constexpr float TILE_HEIGHT = 60;
 
 enum Position {horizontal, vertical};
 

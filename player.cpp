@@ -1,10 +1,5 @@
 #include "player.h"
 
-
-bool match(Tile& tile, int val) {
-    return tile.left == val || tile.right == val;
-}
-
 bool Player::noSolutions(Field& field) const {
     Node* current = head;
     while (current) {

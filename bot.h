@@ -11,7 +11,7 @@
 #include "player.h"
 #include "set.h"
 #include "profile.h"
-#define ITERS 1000
+constexpr int ITERS = 1000;
 
 class Bot:public Player {
 public:

@@ -20,23 +20,28 @@ void Statistics::save() {
 
 void Statistics::load() {
     if (std::filesystem::exists(FILE_NAME)) {
-        try {
-            std::ifstream file(FILE_NAME);
-            json data;
-            file >> data;
-
-            record = data.value("record", 0);
-            points = data.value("points", 0);
-            games = data.value("gamesPlayed", 0);
-            wins = data.value("wins", 0);
-            winningPercentage = data.value("winningPercentage", 0);
-        }
-        catch (const std::exception& e) {
-            std::cerr << "Ошибка чтения " << FILE_NAME << ": " << e.what()
-                      << ". Создаём новый файл.\n";
+        std::ifstream file(FILE_NAME);
+        if (!file.is_open()) {
             record = points = games = wins = winningPercentage = 0;
             save();
+            return;
         }
+
+        json data;
+        file >> data;
+
+        if (file.fail() || data.is_discarded()) {
+            std::cerr << "Ошибка чтения " << FILE_NAME << ". Создаём новый файл.\n";
+            record = points = games = wins = winningPercentage = 0;
+            save();
+            return;
+        }
+
+        record = data.value("record", 0);
+        points = data.value("points", 0);
+        games = data.value("gamesPlayed", 0);
+        wins = data.value("wins", 0);
+        winningPercentage = data.value("winningPercentage", 0);
     }
     else {
         record = points = games = wins = winningPercentage = 0;

@@ -3,6 +3,8 @@ project(dominoCPP)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -DNDEBUG -fno-rtti -fno-exceptions")
+
 set(RAYLIB_PATH "${PROJECT_SOURCE_DIR}/raylib")
 include_directories(${RAYLIB_PATH}/include)
 link_directories(${RAYLIB_PATH}/lib)

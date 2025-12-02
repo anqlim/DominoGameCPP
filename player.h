@@ -6,11 +6,11 @@
 #include "field.h"
 #include "tile.h"
 
-#define SHIFT 10
-#define USER_X 50
-#define USER_Y 50
-#define BOT_X 50
-#define BOT_Y 830
+constexpr int SHIFT = 10;
+constexpr int USER_X = 50;
+constexpr int USER_Y = 50;
+constexpr int BOT_X = 50;
+constexpr int BOT_Y = 830;
 
 class Player:public List {
 public:
@@ -27,6 +27,8 @@ public:
     void draw(Node* selected);
 };
 
-bool match(Tile& tile, int val);
+inline bool match(Tile& tile, int val) {
+    return tile.left == val || tile.right == val;
+}
 
 #endif

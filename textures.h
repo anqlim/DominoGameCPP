@@ -7,7 +7,9 @@
 
 extern std::unordered_map<int, Texture2D> cache;
 
-int getTileHash(int left, int right, bool isSelected = false);
+inline int getTileHash(int left, int right, bool isSelected = false) {
+    return left * 100 + right * 10 + (isSelected ? 1 : 0);
+}
 void generateTextures();
 
 #endif

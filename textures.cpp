@@ -2,9 +2,6 @@
 
 std::unordered_map<int, Texture2D> cache;
 
-int getTileHash(int left, int right, bool isSelected) {
-    return left * 100 + right * 10 + (isSelected ? 1 : 0);
-}
 void generateTextures() {
     for (int left = 0; left <= 6; ++left) {
         for (int right = 0; right <= 6; ++right) {
