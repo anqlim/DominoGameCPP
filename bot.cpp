@@ -174,14 +174,12 @@ namespace {
                 simulationResult = simulateGameMCTS(simUnknown, userCopy, node->botState, node->fieldState);
             }
 
-            // BACKPROPAGATION
             for (auto *n: path) {
                 n->visits++;
                 if (simulationResult) n->wins++;
             }
         }
 
-        // Выбор по посещениям
         MCTSNode *best = rootChildren[0].get();
         for (auto &child: rootChildren) {
             if (child->visits > best->visits) {
