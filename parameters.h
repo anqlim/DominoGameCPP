@@ -1,6 +1,9 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+//random
+#define SEED 1
+
 //window
 #define WINDOW_WIDTH 1800
 #define WINDOW_HEIGHT 1000

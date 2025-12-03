@@ -19,6 +19,7 @@ Field Field::copy() {
 }
 
 void Field::draw() {
+    PROFILE_SCOPE("field.draw()");
     Node* current = head;
     float count(0);
     while (current) {

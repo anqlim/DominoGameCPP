@@ -61,8 +61,6 @@ namespace {
             if (!currentPlayer.noSolutions(field)) {
                 std::vector<Tile> candidates;
                 findCandidates(field, currentPlayer.head, candidates);
-
-
                 Tile selected = candidates[rand() % (candidates.size())];
 
                 Node *current = currentPlayer.head;
@@ -105,7 +103,7 @@ void Bot::move(Field& field, int userCount) {
     deleteExisting(field, head, unknown);
 
     //Step 3
-    srand(static_cast<unsigned int>(1));
+    srand(static_cast<unsigned int>(SEED));
     int mx(-1);
     Tile best(candidates[0]);
 

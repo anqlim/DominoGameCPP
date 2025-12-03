@@ -61,6 +61,7 @@ Node* User::clicked(float mouseX, float mouseY) {
     return nullptr;
 }
 void User::draw(Node* selected) {
+    PROFILE_SCOPE("user.draw()");
     Node* current = head;
     int x = USER_X;
     while (current) {

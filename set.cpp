@@ -13,7 +13,7 @@ void createSet(std::vector<Tile>& set) {
         for (int b = a; b <= 6; b++) set.push_back(Tile(a, b));
 }
 void shuffleSet(std::vector<Tile>& set) {
-    srand(static_cast<unsigned int>(1));
+    srand(static_cast<unsigned int>(SEED));
     for (int i = set.size() - 1; i > 0; i--) {
         int j = rand() % (i + 1);
         Tile temp = set[i];

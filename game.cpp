@@ -7,6 +7,7 @@ Game::Game():bazaar({1570, 30, 200, 200},
     initSet(set, user, bot, field);
 }
 void Game::draw() {
+    PROFILE_SCOPE("game.draw()");
     user.draw(selected);
     bot.draw();
     field.draw();
@@ -47,6 +48,7 @@ void Game::manage(State& state, Result& res, Statistics& statistics) {
         Vector2 mouse = GetMousePosition();
 
         if (bazaar.isClicked(mouse.x, mouse.y) && user.noSolutions(field)) {
+            selected = nullptr;
             if (set.empty() && bot.noSolutions(field)) {
                 res = (user.countTiles() > bot.countTiles() || (user.countTiles() == bot.countTiles() && user.points() > bot.points())) ? LOSE : WIN;
                 state = RECORDS;
